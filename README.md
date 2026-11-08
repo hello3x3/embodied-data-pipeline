@@ -50,6 +50,10 @@ Phase semantics:
 - **CoTracker** package + checkpoint
 - `hydra-core`, `iopath`, `omegaconf` for SAM2
 
+Use the Python environment that already has torch/opencv/h5py (on this machine:
+`/home/shujiuhe/apps/miniconda3/envs/omniembodied/bin/python`).  The Makefile
+uses `PY ?= python3`; pass `PY=...` or activate the env first.
+
 ```bash
 pip install -r requirements.txt
 pip install "git+https://github.com/facebookresearch/co-tracker.git"
@@ -73,7 +77,9 @@ Defaults match this machine's shared weights; no network is needed at runtime.
 
 ```bash
 cd ~/projects/robodojo-data-pipeline
-make build TASKS="fill_pen_holder stack_bowls insert_tubes" \
+# use the conda env's python (or activate it first)
+make build PY=$HOME/apps/miniconda3/envs/omniembodied/bin/python \
+           TASKS="fill_pen_holder stack_bowls insert_tubes" \
            EPISODE=episode_0000000.hdf5 OUT=outputs/data_pipeline_web
 ```
 
@@ -141,7 +147,8 @@ channel is their fused representative point used by the model.
 ## Review page
 
 ```bash
-make page            # http://127.0.0.1:8772
+make page PY=$HOME/apps/miniconda3/envs/omniembodied/bin/python
+# http://127.0.0.1:8772
 # or
 python -m http.server 8772 --bind 127.0.0.1 --directory outputs/data_pipeline_web
 ```
@@ -156,6 +163,7 @@ python -m http.server 8772 --bind 127.0.0.1 --directory outputs/data_pipeline_we
 ## Diagnostics
 
 ```bash
+make check PY=$HOME/apps/miniconda3/envs/omniembodied/bin/python
 make diag-object TASK=fill_egg_holder SUB=0   # 8-panel step-by-step
 make diag-samples                              # 10 subtask samples
 make diag-tasks                                # 10 task samples
