@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robodojo-data-pipeline"
+version = "0.1.0"
+description = "RoboDojo depth HDF5 -> subtask/phase dense trajectories + review page"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26",
+  "opencv-python>=4.8",
+  "h5py>=3.10",
+  "matplotlib>=3.8",
+  "torch>=2.3",
+  "hydra-core>=1.3",
+  "iopath>=0.1.10",
+  "omegaconf>=2.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+include = ["data_pipeline*"]

@@ -1,0 +1,16 @@
+# Core
+numpy>=1.26
+opencv-python>=4.8
+h5py>=3.10
+matplotlib>=3.8
+
+# Torch (install the CUDA build matching your driver)
+torch>=2.3
+
+# SAM2 runtime deps (SAM2 itself is a source checkout, see README)
+hydra-core>=1.3
+iopath>=0.1.10
+omegaconf>=2.3
+
+# CoTracker is installed from source; uncomment if you want pip to do it:
+# co-tracker @ git+https://github.com/facebookresearch/co-tracker.git
