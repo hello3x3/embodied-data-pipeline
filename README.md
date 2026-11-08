@@ -1,11 +1,13 @@
-# RoboDojo data pipeline
+# Embodied data pipeline
 
-Convert RoboDojo depth HDF5 episodes into:
+Convert robot manipulation episodes into:
 
 1. **subtask / phase dense trajectories** (training sidecar), and
 2. a **static review page** with frame playback (task → subtask → phase → frame).
 
-The data side does **not** cut chunks. One phase is one variable-length 6.25 Hz
+The current adapter is for **RoboDojo depth HDF5**; other datasets can be
+added by implementing the same `Episode` loader contract (see
+[Datasets](#datasets)). The data side does **not** cut chunks. One phase is one variable-length 6.25 Hz
 trajectory; the training loader slides its own 7-point window over it.
 
 ```text
@@ -73,10 +75,21 @@ export COTRACKER_CKPT=/path/to/scaled_offline.pth
 
 Defaults match this machine's shared weights; no network is needed at runtime.
 
+## Datasets
+
+`data_pipeline/io.py` currently implements the RoboDojo depth HDF5 layout:
+`vision/cam_*/colors`, `state|action/*_ee_poses`, `state|action/*_joint_states`,
+`vision/cam_*/intrinsic_matrix|extrinsic_matrix`.
+
+To add another dataset, provide a loader that returns an `Episode` with the
+same fields (`T`, `L/R`, `gL/gR`, `actions`, `proprio`, `ee_action`, `K/E/hw`,
+`read_color`). The rest of the pipeline (segmentation, tracks, sidecar, page)
+is dataset-agnostic. Planned layout: `data_pipeline/adapters/<dataset>.py`.
+
 ## Build
 
 ```bash
-cd ~/projects/robodojo-data-pipeline
+cd ~/projects/embodied-data-pipeline
 # use the conda env's python (or activate it first)
 make build PY=$HOME/apps/miniconda3/envs/omniembodied/bin/python \
            TASKS="fill_pen_holder stack_bowls insert_tubes" \

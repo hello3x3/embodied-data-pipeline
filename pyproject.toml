@@ -3,9 +3,9 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "robodojo-data-pipeline"
+name = "embodied-data-pipeline"
 version = "0.1.0"
-description = "RoboDojo depth HDF5 -> subtask/phase dense trajectories + review page"
+description = "Robot episode data -> subtask/phase dense trajectories + review page"
 requires-python = ">=3.10"
 dependencies = [
   "numpy>=1.26",
