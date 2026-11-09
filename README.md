@@ -116,6 +116,27 @@ Notes:
 - `--object auto` uses the old ring-corner fallback instead of SAM2.
 - Episode files: `<task>/arx_x5/data/episode_*.hdf5` (100 per task).
 
+## Full dataset (sidecars only)
+
+For cleaning all episodes without object tracking / frames:
+
+```bash
+python -m data_pipeline.batch_sidecar --workers 8 --out outputs/robodojo_sidecars
+```
+
+On this machine: **3,500 episodes (35 tasks x 100)** in ~4 minutes with 8
+workers, **3,300 ok / 200 no_grasp / 0 errors**, ~88 MB of JSON.
+
+Then one sampled episode per task for the review page:
+
+```bash
+python scripts/build_sample_page.py   --sidecars outputs/robodojo_sidecars   --out outputs/robodojo_review_sample --workers 4
+```
+
+The sample page uses `--object none` (anchors/phases only). Two tasks
+(`pour_liquid_into_cup`, `match_and_pick_from_conveyor`) have no gripper
+close→open cycle, so they are not in the sample page.
+
 ## Outputs
 
 ```text

@@ -5,11 +5,13 @@ EPISODE ?= episode_0000000.hdf5
 OBJECT ?= sam2
 ARGS ?=
 
-.PHONY: help build page diag-object diag-samples diag-tasks check clean
+.PHONY: help build page batch-sidecars sample-page diag-object diag-samples diag-tasks check clean
 
 help:
 	@echo "make build         build sidecar + review page"
 	@echo "make page          serve $(OUT) on http://127.0.0.1:8772"
+	@echo "make batch-sidecars  full dataset -> sidecars (no object/frames)"
+	@echo "make sample-page   one sampled episode per task -> review page"
 	@echo "make check         compile + unit tests"
 	@echo "make diag-object   TASK=... SUB=...  (8-panel diagnostic)"
 	@echo "make diag-samples  10 subtask samples"
@@ -22,6 +24,13 @@ build:
 
 page:
 	$(PY) -m http.server 8772 --bind 127.0.0.1 --directory $(OUT)
+
+batch-sidecars:
+	$(PY) -m data_pipeline.batch_sidecar --workers 8 --out outputs/robodojo_sidecars
+
+sample-page:
+	$(PY) scripts/build_sample_page.py --sidecars outputs/robodojo_sidecars \
+		--out outputs/robodojo_review_sample --workers 4
 
 TASK ?= fill_pen_holder
 SUB ?= 0

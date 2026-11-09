@@ -70,6 +70,8 @@ def _sidecar_phase(pt, plan_id: str) -> dict:
 def _track_subtask(ep: Episode, sub: Subtask, task: str, tracker: str,
                    device: str, object_method: str = "sam2"):
     """Returns (obj dict, qc, SeedResult | None)."""
+    if object_method == "none":
+        return {}, {}, None
     if tracker == "cotracker":
         res = (segment_and_track(ep, sub, device=device)
                if object_method == "sam2" else auto_seed_track(ep, sub, device=device))
@@ -194,8 +196,8 @@ def main() -> int:
     ap.add_argument("--out", type=Path, default=Path("outputs/task_review"))
     ap.add_argument("--stride", type=int, default=POINT_STRIDE)
     ap.add_argument("--tracker", default="cotracker", choices=["cotracker", "lk"])
-    ap.add_argument("--object", default="sam2", choices=["sam2", "auto"],
-                    help="object seed: SAM2 mask+CoTracker, or the old gripper-ring fallback")
+    ap.add_argument("--object", default="sam2", choices=["sam2", "auto", "none"],
+                    help="object seed: SAM2+CoTracker, ring fallback, or none (anchors only)")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--max-frames", type=int, default=0, help="调试：每阶段最多渲染多少帧")
     args = ap.parse_args()
